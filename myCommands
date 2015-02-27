@@ -1,0 +1,16 @@
+#To fetch data from github
+git fetch mavassignment
+
+
+#To list branches
+git branch -a 
+
+
+#To create a new branch/project with tracking
+git checkout -b test_flight origin/master
+
+#For merging - To fetch the code from github and merge your own code with paparazzi master
+git pull
+
+#
+git status
