@@ -34,9 +34,9 @@ open Printf
 let () =
   let ivy_bus = ref Defivybus.default_ivy_bus  in
   let host = ref "85.214.48.162"
-  and port = ref 4242
-  and datalink_port = ref 4243
-  and id = ref "7" in
+  and port = ref 4142
+  and datalink_port = ref 4143
+  and id = ref "202" in
 
   let options = [
     "-b", Arg.Set_string ivy_bus, (sprintf "<ivy bus> Default is %s" !ivy_bus);
