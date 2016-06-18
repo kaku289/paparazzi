@@ -277,6 +277,11 @@ static void send_dl_value(struct transport_tx *trans, struct link_device *dev)
   PeriodicSendDlValue(trans, dev);
 }
 
+static void send_routeinfo(struct transport_tx *trans, struct link_device *dev)
+{
+  pprz_msg_send_ROUTEINFO(trans, dev, AC_ID, &(isRouteFinished));
+};
+
 static void send_rotorcraft_cmd(struct transport_tx *trans, struct link_device *dev)
 {
   pprz_msg_send_ROTORCRAFT_CMD(trans, dev, AC_ID,
@@ -330,6 +335,7 @@ void autopilot_init(void)
   register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_ROTORCRAFT_FP, send_fp);
   register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_ROTORCRAFT_CMD, send_rotorcraft_cmd);
   register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_DL_VALUE, send_dl_value);
+  register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_ROUTEINFO, send_routeinfo);
 #ifdef ACTUATORS
   register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_ACTUATORS, send_actuators);
 #endif

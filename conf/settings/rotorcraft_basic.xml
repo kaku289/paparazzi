@@ -12,6 +12,6 @@
       </dl_setting>
       <dl_setting var="autopilot_mode" min="0" step="1" max="2" module="autopilot" shortname="mode" values="KILL|Fail|HOME" handler="set_mode"/>
     </dl_settings>
-
+    
   </dl_settings>
 </settings>

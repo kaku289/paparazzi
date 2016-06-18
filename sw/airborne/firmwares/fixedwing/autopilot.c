@@ -104,6 +104,12 @@ static void send_estimator(struct transport_tx *trans, struct link_device *dev)
                           &(stateGetPositionUtm_f()->alt), &(stateGetSpeedEnu_f()->z));
 }
 
+static void send_routeinfo(struct transport_tx *trans, struct link_device *dev)
+{
+  pprz_msg_send_ROUTEINFO(trans, dev, AC_ID,
+                          &(isRouteFinished));
+}
+
 static void send_bat(struct transport_tx *trans, struct link_device *dev)
 {
   int16_t amps = (int16_t)(current / 10);
@@ -201,6 +207,7 @@ void autopilot_init(void)
   register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_ENERGY, send_energy);
   register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_DL_VALUE, send_dl_value);
   register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_DESIRED, send_desired);
+  register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_ROUTEINFO, send_routeinfo);
 #if defined RADIO_CALIB && defined RADIO_CONTROL_SETTINGS
   register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_RC_SETTINGS, send_rc_settings);
 #endif
