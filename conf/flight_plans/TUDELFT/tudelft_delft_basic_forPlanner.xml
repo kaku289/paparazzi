@@ -17,10 +17,10 @@
     <waypoint name="c3" x="15.0" y="15.0"/>
     <waypoint name="c4" x="30.0" y="15.0"/-->
     <waypoint name="CAM" x="14.2" y="-29.4"/>
-    <waypoint name="TD" x="5.6" y="-10.9"/>
+    <waypoint name="TD" x="-3.0" y="-5.0"/>
   </waypoints>
   <variables>
-    <variable var="isRouteFinished" init="0.0" type="float"/>
+    <variable var="isRouteFinished" init="0.0" type="float" min="0." max="2.0" step="1.0"/>
   </variables>
   <blocks>
     <block name="Wait GPS">
@@ -48,7 +48,7 @@
       <stay wp="STDBY"/>
     </block>
     <block name="stay_p1">
-      <set var="isRouteFinished" value="1.0"/>
+      <!--set var="isRouteFinished" value="1.0"/-->
       <stay wp="p1"/>
     </block>
     <block name="go_p2">
@@ -66,17 +66,8 @@
       <go from="p1" hmode="route" wp="p3"/>
       <go from="p3" hmode="route" wp="p4"/>
       <go from="p4" hmode="route" wp="p1"/>
-      <deroute block="stay_p1"/>
-    </block>
-    <block name="test yaw">
-      <go wp="p1"/>
-      <for from="1" to="16" var="i">
-        <heading alt="WaypointAlt(WP_p1)" course="90 * $i" until="stage_time > 3"/>
-      </for>
-      <deroute block="Standby"/>
-    </block>
-    <block name="circle CAM" pre_call="nav_set_heading_towards_waypoint(WP_CAM)">
-      <circle radius="nav_radius" wp="CAM"/>
+      <deroute block="land"/>
+      <!--deroute block="stay_p1"/-->
     </block>
     <block name="land here" strip_button="Land Here" strip_icon="land-right.png">
       <call fun="NavSetWaypointHere(WP_TD)"/>
