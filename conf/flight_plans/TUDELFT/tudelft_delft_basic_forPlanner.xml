@@ -18,10 +18,25 @@
     <waypoint name="c4" x="30.0" y="15.0"/-->
     <waypoint name="CAM" x="14.2" y="-29.4"/>
     <waypoint name="TD" x="-3.0" y="-5.0"/>
+    <waypoint lat="51.9912760" lon="4.3778496" name="_CF1"/>
+    <waypoint lat="51.9913545" lon="4.3783278" name="_CF2"/>
+    <waypoint lat="51.9907045" lon="4.3788059" name="_CF3"/>
+    <waypoint lat="51.9905459" lon="4.3783361" name="_CF4"/>
   </waypoints>
+  <sectors>
+    <sector color="red" name="Field">
+      <corner name="_CF1"/>
+      <corner name="_CF2"/>
+      <corner name="_CF3"/>
+      <corner name="_CF4"/>
+    </sector>
+  </sectors>
   <variables>
     <variable var="isRouteFinished" init="1.0" type="float" min="0." max="2.0" step="1.0"/>
   </variables>
+  <exceptions>
+    <exception cond="!InsideField(GetPosX(), GetPosY())" deroute="Standby"/>
+  </exceptions>
   <blocks>
     <block name="Wait GPS">
       <call fun="NavKillThrottle()"/>
@@ -53,7 +68,8 @@
     </block>
     <block name="route">
       <set var="isRouteFinished" value="0.0"/>
-      <go from="p1" hmode="route" wp="p3"/>
+      <go from="p1" hmode="route" wp="p2"/>
+      <go from="p2" hmode="route" wp="p3"/>
       <go from="p3" hmode="route" wp="p4"/>
       <go from="p4" hmode="route" wp="p1"/>
       <!--deroute block="land"/-->
