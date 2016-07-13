@@ -34,7 +34,7 @@
     </sector>
   </sectors>
   <variables>
-    <variable var="isRouteFinished" init="0.0" type="float" min="0." max="2.0" step="1.0"/>
+    <variable var="isRouteFinished" init="0.0" type="float" min="0." max="2.0" step="1.0" values="EnRoute|Checked_Depot|ReadyToGo"/>
   </variables>
   <exceptions>
     <exception cond="!InsideField(GetPosX(), GetPosY())" deroute="stay_p1"/>
@@ -81,8 +81,9 @@
       <go from="p3" hmode="route" wp="p4"/>
       <stay wp="p4" alt="GetAltRef()+3" until="stage_time>10" />
       <go from="p4" hmode="route" wp="p1"/>
-      <!--deroute block="land"/-->
-      <deroute block="stay_p1"/>
+      <stay wp="p1" until="stage_time>5" />
+      <deroute block="land here"/>
+      <!--deroute block="stay_p1"/-->
     </block>
     <block name="land here" strip_button="Land Here" strip_icon="land-right.png">
       <call fun="NavSetWaypointHere(WP_TD)"/>
