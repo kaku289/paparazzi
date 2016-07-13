@@ -3,6 +3,8 @@
 <flight_plan alt="8" ground_alt="0" lat0="51 59 27.6" lon0="4 22 42.0" max_dist_from_home="60" name="Delft Basic" security_height="2">
   <header>
 #include "autopilot.h"
+#include "subsystems/electrical.h"
+#include "subsystems/datalink/datalink.h"
 </header>
   <waypoints>
     <waypoint name="HOME" x="0.0" y="0.0"/>
@@ -36,6 +38,8 @@
   </variables>
   <exceptions>
     <exception cond="!InsideField(GetPosX(), GetPosY())" deroute="stay_p1"/>
+    <exception cond="(datalink_time>30) && (exception_flag[0] == 0)" deroute="land here" exec="set_exception_flag(0)"/>
+    <exception cond="(electrical.bat_low) && (exception_flag[1] == 0)" deroute="land here" exec="set_exception_flag(1)"/>
   </exceptions>
   <blocks>
     <block name="Wait GPS">
@@ -48,6 +52,8 @@
     </block>
     <block name="Holding point">
       <call fun="NavKillThrottle()"/>
+      <set var="exception_flag[0]" value="0">
+      <set var="exception_flag[1]" value="0">
       <attitude pitch="0" roll="0" throttle="0" until="FALSE" vmode="throttle"/>
     </block>
     <block name="Start Engine">
