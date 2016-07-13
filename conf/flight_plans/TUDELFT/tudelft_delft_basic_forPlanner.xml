@@ -32,10 +32,10 @@
     </sector>
   </sectors>
   <variables>
-    <variable var="isRouteFinished" init="1.0" type="float" min="0." max="2.0" step="1.0"/>
+    <variable var="isRouteFinished" init="0.0" type="float" min="0." max="2.0" step="1.0"/>
   </variables>
   <exceptions>
-    <exception cond="!InsideField(GetPosX(), GetPosY())" deroute="Standby"/>
+    <exception cond="!InsideField(GetPosX(), GetPosY())" deroute="stay_p1"/>
   </exceptions>
   <blocks>
     <block name="Wait GPS">
@@ -55,7 +55,7 @@
       <attitude pitch="0" roll="0" throttle="0" until="FALSE" vmode="throttle"/>
     </block>
     <block name="Takeoff" strip_button="Takeoff" strip_icon="takeoff.png">
-      <exception cond="stateGetPositionEnu_f()->z > 2.0" deroute="Standby"/>
+      <exception cond="stateGetPositionEnu_f()->z > 2.0" deroute="stay_p1"/>
       <call fun="NavSetWaypointHere(WP_CLIMB)"/>
       <stay climb="nav_climb_vspeed" vmode="climb" wp="CLIMB"/>
     </block>
@@ -69,8 +69,11 @@
     <block name="route">
       <set var="isRouteFinished" value="0.0"/>
       <go from="p1" hmode="route" wp="p2"/>
+      <stay wp="p2" alt="GetAltRef()+3" until="stage_time>10" />
       <go from="p2" hmode="route" wp="p3"/>
+      <stay wp="p3" alt="GetAltRef()+3" until="stage_time>10" />
       <go from="p3" hmode="route" wp="p4"/>
+      <stay wp="p4" alt="GetAltRef()+3" until="stage_time>10" />
       <go from="p4" hmode="route" wp="p1"/>
       <!--deroute block="land"/-->
       <deroute block="stay_p1"/>
