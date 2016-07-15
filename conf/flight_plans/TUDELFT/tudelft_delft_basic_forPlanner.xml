@@ -10,14 +10,14 @@
     <waypoint name="HOME" x="0.0" y="0.0"/>
     <waypoint name="CLIMB" x="0.0" y="5.0"/>
     <waypoint name="STDBY" x="-2.0" y="-5.0"/>
-    <waypoint name="p1" x="-3.0" y="-5.0"/>
-    <waypoint name="p2" x="-0.6" y="21.6"/>
-    <waypoint name="p3" x="22.2" y="-26.5"/>
-    <waypoint name="p4" x="4.9" y="-34.4"/>
+    <waypoint name="p1" lat="51.9910399" lon="4.3783994"/>
+    <waypoint name="p2" lat="51.9910399" lon="4.3783994"/>
+    <waypoint name="p3" lat="51.9910399" lon="4.3783994"/>
+    <waypoint name="p4" lat="51.9910399" lon="4.3783994"/>
     <!--waypoint name="c1" x="-15.0" y="15.0"/>
     <waypoint name="c2" x="0.0" y="15.0"/>
     <waypoint name="c3" x="15.0" y="15.0"/>
-    <waypoint name="c4" x="30.0" y="15.0"/-->
+    <waypoint name="c4" lat="51.9912720" lon="4.3781452"/-->
     <waypoint name="CAM" x="14.2" y="-29.4"/>
     <waypoint name="TD" x="-3.0" y="-5.0"/>
     <waypoint lat="51.9912760" lon="4.3778496" name="_CF1"/>
@@ -34,12 +34,12 @@
     </sector>
   </sectors>
   <variables>
-    <variable var="isRouteFinished" init="0.0" type="float" min="0." max="2.0" step="1.0" values="EnRoute|Checked_Depot|ReadyToGo"/>
+    <variable var="isRouteFinished" init="0.0" type="float" min="0." max="1.0" step="1.0" values="EnRoute|ReadyToGo"/>
   </variables>
   <exceptions>
     <exception cond="!InsideField(GetPosX(), GetPosY())" deroute="stay_p1"/>
-    <exception cond="(datalink_time>30) && (exception_flag[0] == 0)" deroute="land here" exec="set_exception_flag(0)"/>
-    <exception cond="(electrical.bat_low) && (exception_flag[1] == 0)" deroute="land here" exec="set_exception_flag(1)"/>
+    <exception cond="(datalink_time>30) && (exception_flag[0] == 0)" deroute="land here"/>
+    <exception cond="(electrical.bat_low) && (exception_flag[1] == 0)" deroute="land here"/>
   </exceptions>
   <blocks>
     <block name="Wait GPS">
@@ -52,16 +52,19 @@
     </block>
     <block name="Holding point">
       <call fun="NavKillThrottle()"/>
-      <set var="exception_flag[0]" value="0">
-      <set var="exception_flag[1]" value="0">
+      <set var="exception_flag[0]" value="0"/>
+      <set var="exception_flag[1]" value="0"/>
       <attitude pitch="0" roll="0" throttle="0" until="FALSE" vmode="throttle"/>
     </block>
     <block name="Start Engine">
+      <!--exception cond="0.5 > isReady" deroute="Takeoff" /-->
+      <set var="isRouteFinished" value="0.0"/>
       <call fun="NavResurrect()"/>
-      <attitude pitch="0" roll="0" throttle="0" until="FALSE" vmode="throttle"/>
+      <attitude pitch="0" roll="0" throttle="0" until="stage_time>2" vmode="throttle"/>
+      <deroute block="Takeoff"/>
     </block>
     <block name="Takeoff" strip_button="Takeoff" strip_icon="takeoff.png">
-      <exception cond="stateGetPositionEnu_f()->z > 2.0" deroute="stay_p1"/>
+      <exception cond="stateGetPositionEnu_f()->z > 2.0" deroute="route"/>
       <call fun="NavSetWaypointHere(WP_CLIMB)"/>
       <stay climb="nav_climb_vspeed" vmode="climb" wp="CLIMB"/>
     </block>
@@ -73,20 +76,25 @@
       <stay wp="p1"/>
     </block>
     <block name="route">
-      <set var="isRouteFinished" value="0.0"/>
       <go from="p1" hmode="route" wp="p2"/>
-      <stay wp="p2" alt="GetAltRef()+3" until="stage_time>10" />
+      <stay wp="p2" alt="3" until="stage_time>10" />
       <go from="p2" hmode="route" wp="p3"/>
-      <stay wp="p3" alt="GetAltRef()+3" until="stage_time>10" />
+      <stay wp="p3" alt="3" until="stage_time>10" />
       <go from="p3" hmode="route" wp="p4"/>
-      <stay wp="p4" alt="GetAltRef()+3" until="stage_time>10" />
+      <stay wp="p4" alt="3" until="stage_time>10" />
       <go from="p4" hmode="route" wp="p1"/>
-      <stay wp="p1" until="stage_time>5" />
-      <deroute block="land here"/>
+      <!--stay wp="p1" until="stage_time>5" /-->
+      <deroute block="land_p1"/>
       <!--deroute block="stay_p1"/-->
+    </block>
+    <block name="land_p1">
+      <call fun="NavCopyWaypoint(WP_TD,WP_p1)"/>
+      <deroute block="land"/>
     </block>
     <block name="land here" strip_button="Land Here" strip_icon="land-right.png">
       <call fun="NavSetWaypointHere(WP_TD)"/>
+      <set var="exception_flag[0]" value="1"/>
+      <set var="exception_flag[1]" value="1"/>
     </block>
     <block name="land">
       <go wp="TD"/>
