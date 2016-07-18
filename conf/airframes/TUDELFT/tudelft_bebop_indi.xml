@@ -4,8 +4,8 @@
 
   <firmware name="rotorcraft">
     <target name="ap" board="bebop">
-      <!--configure name="HOST" value="192.168.43.$(AC_ID)"/>
-      <configure name="MODEM_HOST" value="192.168.43.203"/-->	
+      <configure name="HOST" value="192.168.10.$(AC_ID)"/>
+      <configure name="MODEM_HOST" value="192.168.10.19"/>
     </target>
     <target name="nps" board="pc">
       <module name="fdm" type="jsbsim"/>

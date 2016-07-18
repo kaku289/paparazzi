@@ -268,16 +268,18 @@
     </session>
     <session name="2Drones_Flight">
       <program name="Server"/>
-      <program name="GCS"/>
+      <program name="GCS">
+        <arg flag="-layout" constant="large_left_col.xml"/>
+      </program>
       <program name="Data Link">
         <arg flag="-udp"/>
         <arg flag="-udp_broadcast"/>
       </program>
       <program name="Ivy2UDP">
-        <arg flag="-h" constant="192.168.43.203"/>
+        <arg flag="-h" constant="192.168.10.19"/>
       </program>
       <program name="Ivy2UDP">
-        <arg flag="-h" constant="192.168.43.203"/>
+        <arg flag="-h" constant="192.168.10.19"/>
         <arg flag="-id" constant="212"/>
         <arg flag="-p" constant="4042"/>
         <arg flag="-dp" constant="4043"/>
