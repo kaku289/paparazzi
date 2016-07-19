@@ -4,9 +4,10 @@
 
   <firmware name="rotorcraft">
     <target name="ap" board="bebop">
-      <!--configure name="HOST" value="192.168.43.$(AC_ID)"/>
-      <configure name="MODEM_HOST" value="192.168.43.203"/-->	
+    <!--configure name="HOST" value="192.168.43.$(AC_ID)"/>
+      <configure name="MODEM_HOST" value="192.168.43.203"/-->
     </target>
+
     <target name="nps" board="pc">
       <module name="fdm" type="jsbsim"/>
       <module name="udp"/>
@@ -92,10 +93,7 @@
     <define name="H_Y" value="0.0017972"/>
     <define name="H_Z" value="0.9211303"/>
 
-<<<<<<< HEAD
-=======
     <!-- For vibrating airfames -->
->>>>>>> 66580b2ff42f0a794500d4160ac2accfcd2f54e6
     <define name="GRAVITY_HEURISTIC_FACTOR" value="0"/>
   </section>
 
