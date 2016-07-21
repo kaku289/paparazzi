@@ -29,11 +29,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include "video.h"
+#include "mcu_periph/i2c.h"
+#include "mt9v117.h"
+#include "mt9f002.h"
 #include "mcu.h"
-int KillGracefully(char *process_name);
+#include "boards/bebop.h"
 
-int KillGracefully(char *process_name)
+static int kill_gracefull(char *process_name)
   {
     /* "pidof" always in /bin on Bebop firmware tested 1.98, 2.0.57, no need for "which" */
     char pidof_commandline[200] = "/bin/pidof ";
@@ -83,10 +85,51 @@ void board_init(void)
   */
   int ret __attribute__((unused)) = system("killall -q -15 DragonStarter.sh");
   usleep(50000); /* Give DragonStarter 50ms time to end on a busy system */
-  KillGracefully("dragon-prog");
-  (void) ret;
+  kill_gracefull("dragon-prog");
+}
 
-  // We also try to initialize the video CMOS chips here (Bottom and front)
-  mt9v117_init();
-  mt9f002_init();
+void board_init2(void)
+{
+  /* Initialize MT9V117 chipset (Bottom camera) */
+  struct mt9v117_t mt9v117 = {
+    // Initial values
+
+    // I2C connection port
+    .i2c_periph = &i2c0
+  };
+  mt9v117_init(&mt9v117);
+
+  /* Initialize MT9F002 chipset (Front camera) */
+  struct mt9f002_t mt9f002 = {
+    // Precomputed values to go from InputCLK of (26/2)MHz to 96MH
+    .interface = MT9F002_PARALLEL,
+    .input_clk_freq = (26 / 2),
+    .vt_pix_clk_div = 7,
+    .vt_sys_clk_div = 1,
+    .pre_pll_clk_div = 1,
+    .pll_multiplier = 59,
+    .op_pix_clk_div = 8,
+    .op_sys_clk_div = 1,
+    .shift_vt_pix_clk_div = 1,
+    .rowSpeed_2_0 = 1,
+    .row_speed_10_8 = 1,
+
+    // Initial values
+    .target_fps = 5,
+    .target_exposure = 30,
+    .gain_green1 = 2.0,
+    .gain_blue = 2.0,
+    .gain_red = 2.0,
+    .gain_green2 = 2.0,
+    .output_width = MT9F002_OUTPUT_WIDTH,
+    .output_height = MT9F002_OUTPUT_HEIGHT,
+    .output_scaler = MT9F002_OUTPUT_SCALER,
+    .offset_x = MT9F002_INITIAL_OFFSET_X,
+    .offset_y = MT9F002_INITIAL_OFFSET_Y,
+
+    // I2C connection port
+    .i2c_periph = &i2c0
+  };
+
+  mt9f002_init(&mt9f002);
 }
