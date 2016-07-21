@@ -1,6 +1,6 @@
 <!DOCTYPE flight_plan SYSTEM "../flight_plan.dtd">
 
-<flight_plan alt="8" ground_alt="0" lat0="51 59 27.6" lon0="4 22 42.0" max_dist_from_home="60" name="Delft Basic" security_height="2">
+<flight_plan alt="8" ground_alt="0" lat0="51 59 27.6" lon0="4 22 42.0" max_dist_from_home="200" name="Delft Basic" security_height="2">
   <header>
 #include "autopilot.h"
 #include "subsystems/electrical.h"
@@ -20,24 +20,24 @@
     <waypoint name="c4" lat="51.9912720" lon="4.3781452"/-->
     <waypoint name="CAM" x="14.2" y="-29.4"/>
     <waypoint name="TD" x="-3.0" y="-5.0"/>
-    <waypoint lat="51.9912760" lon="4.3778496" name="_CF1"/>
-    <waypoint lat="51.9913545" lon="4.3783278" name="_CF2"/>
-    <waypoint lat="51.9907045" lon="4.3788059" name="_CF3"/>
-    <waypoint lat="51.9905459" lon="4.3783361" name="_CF4"/>
+    <waypoint lat="51.9912760" lon="4.3778496" name="CF1"/>
+    <waypoint lat="51.9913545" lon="4.3783278" name="CF2"/>
+    <waypoint lat="51.9907045" lon="4.3788059" name="CF3"/>
+    <waypoint lat="51.9905459" lon="4.3783361" name="CF4"/>
   </waypoints>
   <sectors>
     <sector color="red" name="Field">
-      <corner name="_CF1"/>
-      <corner name="_CF2"/>
-      <corner name="_CF3"/>
-      <corner name="_CF4"/>
+      <corner name="CF1"/>
+      <corner name="CF2"/>
+      <corner name="CF3"/>
+      <corner name="CF4"/>
     </sector>
   </sectors>
   <variables>
     <variable var="isRouteFinished" init="0.0" type="float" min="0." max="1.0" step="1.0" values="EnRoute|ReadyToGo"/>
   </variables>
   <exceptions>
-    <exception cond="!InsideField(GetPosX(), GetPosY())" deroute="stay_p1"/>
+    <!--exception cond="!InsideField(GetPosX(), GetPosY())" deroute="stay_p1"/-->
     <exception cond="(datalink_time>30) && (exception_flag[0] == 0)" deroute="land here"/>
     <exception cond="(electrical.bat_low) && (exception_flag[1] == 0)" deroute="land here"/>
   </exceptions>
