@@ -1,6 +1,6 @@
 <!DOCTYPE flight_plan SYSTEM "../flight_plan.dtd">
 
-<flight_plan alt="8" ground_alt="0" lat0="51 59 27.6" lon0="4 22 42.0" max_dist_from_home="60" name="Delft Basic" security_height="2">
+<flight_plan alt="6" ground_alt="0" lat0="51 59 27.6" lon0="4 22 42.0" max_dist_from_home="60" name="Delft Basic" security_height="2">
   <header>
 #include "autopilot.h"
 #include "subsystems/electrical.h"
@@ -11,9 +11,9 @@
     <waypoint name="CLIMB" x="0.0" y="5.0"/>
     <waypoint name="STDBY" x="-2.0" y="-5.0"/>
     <waypoint name="p1" lat="51.9910399" lon="4.3783994"/>
-    <waypoint name="p2" lat="51.9910399" lon="4.3783994"/>
-    <waypoint name="p3" lat="51.9910399" lon="4.3783994"/>
-    <waypoint name="p4" lat="51.9910399" lon="4.3783994"/>
+    <waypoint name="p2" x="-2.0" y="2.0"/>
+    <waypoint name="p3" x="12.42" y="6.13"/>
+    <waypoint name="p4" x="-16.42" y="-2.13"/>
     <!--waypoint name="c1" x="-15.0" y="15.0"/>
     <waypoint name="c2" x="0.0" y="15.0"/>
     <waypoint name="c3" x="15.0" y="15.0"/>
@@ -37,7 +37,7 @@
     <variable var="isRouteFinished" init="0.0" type="float" min="0." max="1.0" step="1.0" values="EnRoute|ReadyToGo"/>
   </variables>
   <exceptions>
-    <!--exception cond="!InsideField(GetPosX(), GetPosY())" deroute="stay_p1"/-->
+    <exception cond="!InsideField(GetPosX(), GetPosY())" deroute="stay_p1"/>
     <exception cond="(datalink_time>30) && (exception_flag[0] == 0)" deroute="land here"/>
     <exception cond="(electrical.bat_low) && (exception_flag[1] == 0)" deroute="land here"/>
   </exceptions>
@@ -77,20 +77,15 @@
     </block>
     <block name="route">
       <go from="p1" hmode="route" wp="p2"/>
-      <stay wp="p2" alt="3" until="stage_time>10" />
+      <stay wp="p2" until="stage_time>10" />
       <go from="p2" hmode="route" wp="p3"/>
-      <!--while cond="LessThan(fabs(GetPosX()-WaypointX(WP_p3)), 0.01) "/-->
-      <stay wp="p3" alt="3" until="stage_time>10"/>
-      <!--/while-->
-      <go from="p3" hmode="route" wp="p4"/>
-      <stay wp="p4" alt="3" until="stage_time>10" />
-      <go from="p4" hmode="route" wp="p1"/>
-      <!--stay wp="p1" until="stage_time>5" /-->
-      <deroute block="land_p1"/>
-      <!--deroute block="stay_p1"/-->
+      <stay wp="p3" until="stage_time>15"/>
+      <go from="p3" hmode="route" wp="p2"/>
+      <stay wp="p2" until="stage_time>5" />
+      <deroute block="land_p2"/>
     </block>
-    <block name="land_p1">
-      <call fun="NavCopyWaypoint(WP_TD,WP_p1)"/>
+    <block name="land_p2">
+      <call fun="NavCopyWaypoint(WP_TD,WP_p2)"/>
       <deroute block="land"/>
     </block>
     <block name="land here" strip_button="Land Here" strip_icon="land-right.png">
@@ -108,8 +103,8 @@
       <stay climb="nav_descend_vspeed" vmode="climb" wp="TD"/>
     </block>
     <block name="landed">
-      <attitude pitch="0" roll="0" throttle="0" until="stage_time>2" vmode="throttle"/>
-      <call fun="NavKillThrottle()"/>
+      <attitude pitch="0" roll="0" throttle="0" until="FALSE" vmode="throttle"/>
+      <!--call fun="NavKillThrottle()"/-->
     </block>
   </blocks>
 </flight_plan>
