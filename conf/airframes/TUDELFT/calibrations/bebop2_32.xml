@@ -3,22 +3,22 @@
 <airframe>
   <section name="IMU" prefix="IMU_">
     <!-- Magneto calibration -->
-
-<define name="MAG_X_NEUTRAL" value="15"/>
-<define name="MAG_Y_NEUTRAL" value="40"/>
-<define name="MAG_Z_NEUTRAL" value="-91"/>
-<define name="MAG_X_SENS" value="6.98103937982" integer="16"/>
-<define name="MAG_Y_SENS" value="7.12165931526" integer="16"/>
-<define name="MAG_Z_SENS" value="7.3293495879" integer="16"/>
-
+    <define name="MAG_X_NEUTRAL" value="64"/>
+    <define name="MAG_Y_NEUTRAL" value="36"/>
+    <define name="MAG_Z_NEUTRAL" value="-90"/>
+    <define name="MAG_X_SENS" value="7.09569743382" integer="16"/>
+    <define name="MAG_Y_SENS" value="7.16754825062" integer="16"/>
+    <define name="MAG_Z_SENS" value="7.41266823924" integer="16"/>
 
 
+    <!-- Magneto current calibration -->    
+    <define name= "MAG_X_CURRENT_COEF" value="0.0139129417612"/>
+    <define name= "MAG_Y_CURRENT_COEF" value="0.00922561649158"/>
+    <define name= "MAG_Z_CURRENT_COEF" value="0.00524732309313"/>
 
 
-
-    <!-- Magneto current calibration -->
-<define name= "MAG_X_CURRENT_COEF" value="-0.00114859141193"/>
-<define name= "MAG_Y_CURRENT_COEF" value="-0.00265185035686"/>
-<define name= "MAG_Z_CURRENT_COEF" value="0.00405825081846"/>
+    <!--define name="BODY_TO_IMU_PHI" value="1.1" unit="deg"/>
+    <define name="BODY_TO_IMU_THETA" value="2.7" unit="deg"/>
+    <define name="BODY_TO_IMU_PSI" value="0." unit="deg"/-->
   </section>
 </airframe>
